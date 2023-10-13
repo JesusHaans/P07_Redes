@@ -1,3 +1,6 @@
+# Autores: Jesus Haans Lopez Hernandez  31124548-8
+#          Axel Casas Espinoza          31621884-9
+
 
 #Funcion que encuentra la N de la formula
 def findN(host):
@@ -48,10 +51,28 @@ def mascaraRedDec(mrs):
             i += 1
         #debug utilizado para encontrar el error en como llenar los octetos.
         #print("aaa" + pocteto + "bbb" + socteto + "ccc" + tocteto + "ddd" + cocteto)
+        # se convierte el binario a decimal si se desea la mascara en binario simplemente hay que contatenar los octetos
         cadenaResultado = str(int(pocteto,2)) + "." + str(int(socteto,2)) + "." + str(int(tocteto,2)) + "." + str(int(cocteto,2))
     return cadenaResultado
 
+#funciion para imprimir el id de la red  dado un array de ip y un sufijo
+def toString(arrayIP):
+    i = 0
+    cadenaResultado = ""
+    while i < 4:
+        if(i == 3):
+            cadenaResultado = cadenaResultado + str(arrayIP[i])
+        else:
+            cadenaResultado = cadenaResultado + str(arrayIP[i]) + "."
+        i += 1
+    return cadenaResultado
 
+def toInt(arrayIP):
+    i = 0
+    while i < len(arrayIP):
+        arrayIP[i] = int(arrayIP[i])
+        i += 1
+    return arrayIP
 
 
 
@@ -68,29 +89,53 @@ i = 0
 print("Ingrese la cantidad de hosts necesarios para cada subred de manera decendente")
 subRedes = {}
 
+#separamos la ip para poder trabajar con ella
+arrayIP = ip.split(".")
+arrayIP = arrayIP[:-1] + arrayIP[-1].split("/")
+arrayIP = toInt(arrayIP)
+
+
 #ciclo para llenar el diccionario
 while i < hosts:
     NOMBRE_SUBRED = "Subred-{"+str(i)+"}"
     HOSTS = int(input("Ingrese la cantidad de hosts necesarios para la Subred-{"+str(i)+"}"+": "))
     subRedes[NOMBRE_SUBRED] = HOSTS
     i = i + 1
+renglon = ""
+
+for subRed in subRedes:
+    n = findN(subRedes[subRed])
+    mascaraSufijo = mascaraRedS(n)
+    mascaraDecimal = mascaraRedDec(mascaraSufijo)
+    numeroMagico = 2**n
+    # Añadimos al Renglon el nombre de la subred y la cantidad de hosts necesarios
+    renglon = " | " + renglon + subRed + " : " + str(subRedes[subRed])
+    # Añadimos al Renglon el id de la subred, la mascara de subred en sufijo y decimal
+    renglon = renglon + " | " + toString(arrayIP) + "/" + str(mascaraSufijo) + "----" + mascaraDecimal
+    # Añadimos al Renglon el rango util de la subred
+    # inicio
+    arrayIP[3] = arrayIP[3] + 1
+    renglon = renglon + " | " + toString(arrayIP)
+    # fin
+    arrayIP[3] = arrayIP[3] + numeroMagico - 3
+    renglon = renglon + " - " + toString(arrayIP)
+    # Añadimos al Renglon la direccion de broadcast
+    arrayIP[3] = arrayIP[3] + 1
+    renglon = renglon + " | " + toString(arrayIP) + " | "
+    #dejamos la IP de la red en el inicio de la siguiente subred
+    arrayIP[3] = arrayIP[3] + 1
+    print(renglon)
+    renglon = ""
 
 
 
 
-
-
-
-
-#separamos la ip para poder trabajar con ella
-ArrayIP = ip.split(".")
-ArrayIP = ArrayIP[:-1] + ArrayIP[-1].split("/")
 
 #imprimimos la ip 
 print("La dirección ID de la red es: "+ip)
 
 # imprimimos la ip separada
-print(ArrayIP)
+print(toString(arrayIP))
 
 #imprimimos el diccionario 
 print("La cantidad de subredes es: "+str(hosts)) 
