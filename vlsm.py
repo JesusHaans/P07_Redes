@@ -51,7 +51,7 @@ def mascaraRedDec(mrs):
             i += 1
         #debug utilizado para encontrar el error en como llenar los octetos.
         #print("aaa" + pocteto + "bbb" + socteto + "ccc" + tocteto + "ddd" + cocteto)
-        # se convierte el binario a decimal si se desea la mascara en binario simplemente hay que contatenar los octetos
+        # se convierte el binario a decimal si se desea la mascara en binario simplemente hay que concatenar los octetos
         cadenaResultado = str(int(pocteto,2)) + "." + str(int(socteto,2)) + "." + str(int(tocteto,2)) + "." + str(int(cocteto,2))
     return cadenaResultado
 
@@ -103,6 +103,10 @@ while i < hosts:
     i = i + 1
 renglon = ""
 
+
+#imprimimos la tabla
+# la tabla constara de la siguiente informacion:
+# nombre de la subred con cantidad de host | id de la subred con Mascara  | rango util | direccion de broadcast |
 for subRed in subRedes:
     n = findN(subRedes[subRed])
     mascaraSufijo = mascaraRedS(n)
@@ -131,6 +135,22 @@ for subRed in subRedes:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+#Zona de pruebas de codigo.
+'''
+
+
 #imprimimos la ip 
 print("La dirección ID de la red es: "+ip)
 
@@ -141,22 +161,6 @@ print(toString(arrayIP))
 print("La cantidad de subredes es: "+str(hosts)) 
 print(subRedes)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''
 Pruebas de componentes de codigo
 
 prueba de componente que saca nuestra n de la dormula 2^n > S:
